@@ -26,9 +26,7 @@ _lexer_cache: t.MutableMapping[tuple, "Lexer"] = LRUCache(50)  # type: ignore
 # static regular expressions
 whitespace_re = re.compile(r"\s+")
 newline_re = re.compile(r"(\r\n|\r|\n)")
-string_re = re.compile(
-    r"('([^'\\]*(?:\\.[^'\\]*)*)'" r'|"([^"\\]*(?:\\.[^"\\]*)*)")', re.S
-)
+string_re = re.compile(r"('(?:[^'\\]|\\.)*'" r'|"(?:[^"\\]|\\.)*")', re.S)
 integer_re = re.compile(
     r"""
     (

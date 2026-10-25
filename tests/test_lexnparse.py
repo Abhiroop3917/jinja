@@ -95,6 +95,21 @@ class TestLexer:
             assert tmpl.render() == char
         assert env.from_string('{{ "\N{HOT SPRINGS}" }}').render() == "\u2668"
 
+    def test_string_re_no_catastrophic_backtrack(self, env):
+        # string_re used nested quantifiers that caused exponential backtracking
+        # on unclosed strings with many escape sequences. Regression test for
+        # https://github.com/pallets/jinja/issues/2109
+        import time
+
+        n = 500
+        payload = "'" + ("\\a" + "b" * n) * n + "c"
+        start = time.monotonic()
+        try:
+            list(env._parse(payload, None, None))
+        except Exception:
+            pass
+        assert time.monotonic() - start < 1.0, "string_re has catastrophic backtracking"
+
     def test_bytefallback(self, env):
         from pprint import pformat
 
