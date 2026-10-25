@@ -179,6 +179,14 @@ class TestFilter:
         t = env.from_string('{{ "jinja"|indent(blank=true) }}')
         assert t.render() == "jinja"
 
+    def test_indent_empty_input(self, env):
+        # Empty input with first=True should not produce whitespace-only output.
+        # Regression test for https://github.com/pallets/jinja/issues/2176
+        t = env.from_string("{% filter indent(4, first=True) %}{% endfilter %}")
+        assert t.render() == ""
+        t = env.from_string("{% filter indent(4, first=True, blank=True) %}{% endfilter %}")
+        assert t.render() == ""
+
     def test_indent_markup_input(self, env):
         """
         Tests cases where the filter input is a Markup type
