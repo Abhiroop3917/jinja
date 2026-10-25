@@ -433,3 +433,11 @@ def test_overlay_enable_async(env):
     env_async = env.overlay(enable_async=True)
     assert env_async.is_async
     assert not env_async.overlay(enable_async=False).is_async
+
+
+def test_filter_argument_error_importable():
+    # FilterArgumentError must be importable from the top-level jinja2 package.
+    # Regression test for https://github.com/pallets/jinja/issues/2172
+    from jinja2 import FilterArgumentError
+    from jinja2.exceptions import FilterArgumentError as _FAE
+    assert FilterArgumentError is _FAE
